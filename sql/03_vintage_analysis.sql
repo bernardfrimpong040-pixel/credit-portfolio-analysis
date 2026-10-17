@@ -54,7 +54,7 @@ ORDER BY years_until_default;
 -- Based on Q1, each vintage gets one of three labels:
 --   Seasoned           8+ years old  -> about 87% or more of its defaults have happened
 --   Partly seasoned    4-7 years old -> about 1/3 to 4/5 have happened, so its
---                                       default rate is a MINIMUM; it can only go up
+--                                       default rate is a MINIMUM (it can only go up)
 --   Too young to judge under 4 years -> under 1/3 have happened
 SELECT
     approval_year                                               AS vintage,

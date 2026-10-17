@@ -224,3 +224,61 @@ Limitations:
 - The economy signal also turned Amber in 2002 (unemployment +1.04 points after the 2001 recession) without a large loss wave following, although the tracked portfolio was still young then (Step 5).
 - The correlation uses only 13 yearly points, and correlation does not prove cause.
 - Only California and Texas have 5,000+ loans in both periods for the state comparison.
+
+### Step 7: Peer benchmarking (like-for-like)
+
+Raw default rates are unfair: small loans and 2005–2008 loans fail far more often whoever made them. Each lender is instead compared with what **all lenders together** achieved on the same kind of loans (same approval year × loan size × industry, up to 1,050 groups).
+
+**Performance index = actual defaults ÷ expected defaults.** Above 1 is worse than peers, below 1 is better. **Loss index** is the same using dollars lost. A difference counts as *clear* when |actual − expected| > 2 × √expected. Loans approved 2001–2010 (portfolio default rate 25.6%).
+
+![Lender benchmark: raw vs fair](outputs/lender_benchmark.png)
+
+| Lender (size rank) | Avg loan | Raw index | **Performance index** | Loss index | Verdict |
+|---|---:|---:|---:|---:|---|
+| Wells Fargo (1) | $168K | 0.99 | **1.06** | 1.40 | Worse than peers |
+| ReadyCap Lending (2) | $501K | 1.28 | **2.37** | 2.54 | Worse than peers |
+| Bank of America (3) | $43K | 1.33 | **1.21** | 1.53 | Worse than peers |
+| JPMorgan Chase (4) | $71K | 1.40 | **1.03** | 1.09 | Worse than peers |
+| U.S. Bank (5) | $111K | 1.02 | **0.80** | 0.75 | Better than peers |
+| PNC (6) | $111K | 0.99 | **0.90** | 1.05 | Better than peers |
+| Comerica (8) | $465K | 0.94 | **1.59** | 2.02 | Worse than peers |
+| Citizens (9) | $44K | 0.94 | **0.91** | 1.13 | Better than peers |
+| **KeyBank (27)** | **$176K** | **0.73** | **0.71** | **0.95** | **Better than peers** |
+
+Full list of lenders with 300+ loans: [`outputs/lender_benchmark.csv`](outputs/lender_benchmark.csv)
+
+Findings:
+1. **The fair comparison changes the ranking.** Lenders making large loans looked fine on raw numbers but are clearly worse than peers on the same kind of loans: ReadyCap goes from 1.28 to **2.37** (32.6% defaulted where peers' rate on similar loans was 13.8%), Comerica from 0.94 to **1.59**, First-Citizens from 0.55 to 1.11. In the other direction, JPMorgan Chase's high raw index (1.40) is almost entirely explained by its loan mix (fair index 1.03).
+2. **Bank of America is only partly explained by small loans.** Its raw index falls from 1.33 to 1.21, so about a third of its excess defaults comes from what it lent. It still had 21% more defaults than peers on the same kind of loans, and lost 53% more dollars (loss index 1.53).
+3. **Default count and dollars lost can disagree.** Wells Fargo defaults only 6% more than peers but loses 40% more dollars (loss index 1.40), so its defaults cost more each. Both indexes are needed.
+
+**KeyBank (rank 27 by dollars, 3,327 loans):**
+
+| Loan size | KeyBank loans | Actual default | Expected (peers) | Index |
+|---|---:|---:|---:|---:|
+| Under $50K | 1,335 | 21.4% | 36.9% | **0.58** |
+| $50K–$150K | 859 | 20.5% | 26.6% | **0.77** |
+| $150K–$350K | 663 | 15.1% | 15.8% | 0.95 |
+| $350K–$1M | 369 | 12.7% | 11.2% | 1.13 |
+| $1M and over | 101 | 9.9% | 9.2% | 1.08 |
+
+4. **KeyBank had 29% fewer defaults than peers on the same kind of loans.** Expected defaults were about 878 (3,327 × 26.4%); actual were about 619 (3,327 × 18.6%). The gap of about 260 is far above the 59 needed to be clear (2 × √878), so this is not luck.
+5. **KeyBank's advantage comes from small loans.** Under $50K it defaulted at 21.4% where peers were at 36.9% (index 0.58). On loans of $350K and over it was slightly above peers (1.13 and 1.08), but with only 369 and 101 loans those gaps are within chance. Because large loans carry most of the dollars, KeyBank's **loss index is 0.95**: only 5% better than peers in dollars, against 29% better in number of defaults.
+
+**States, compared like-for-like** (revisits Step 4; full list in [`outputs/state_benchmark.csv`](outputs/state_benchmark.csv)):
+
+| Worse than peers | Index | Better than peers | Index |
+|---|---:|---|---:|
+| Georgia | 1.40 | Minnesota | 0.75 |
+| Florida | 1.36 | Wisconsin | 0.75 |
+| California | 1.20 | Pennsylvania | 0.77 |
+| Arizona | 1.20 | **Ohio** | **0.82** |
+| Michigan | 1.08 | Washington | 0.86 |
+
+6. **Florida and Georgia stay clearly worse after the adjustment**, so Step 4's concern was not just about *when* they lent. Florida, Georgia, California and Arizona, four states hit hard by the housing bust, are all clearly worse than peers, while Minnesota, Wisconsin, Pennsylvania and Ohio are clearly better.
+7. **California's picture sharpens again.** By number of defaults, California loans failed 20% more than like-for-like peers, while Step 4 showed it lost fewer *dollars* than its size suggested (risk index 0.84). Its defaults are more frequent but cost less each. Together with its 19.9% share and its 8.9-fold deterioration in the boom (Step 6), it remains the key concentration to watch.
+
+Limitations:
+- **CDC Small Business Finance Corp shows 0 defaults on 1,946 loans** (index 0.00). That is almost certainly how this lender's loans are recorded in the data, not real performance, so it should be ignored.
+- The adjustment only accounts for year, size and industry. Differences in state, borrower type or loan terms can still affect a lender's index.
+- Lender names are as recorded; the same bank may appear under slightly different names after mergers.
