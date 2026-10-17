@@ -190,3 +190,37 @@ Limitations:
 - The data has no payoff dates for good loans, so each is assumed outstanding until its scheduled end date. Loans repaid early are counted too long, which makes the annual rate **somewhat too low**.
 - Only loans approved from 2001 are tracked, so in 2002–2005 the tracked portfolio is young, and young loans rarely fail yet. Early-year rates are therefore low partly because of age. The vintage curves (finding 1) are the fair comparison; the roll-forward shows **timing**.
 - 2001 starts with 7,886 loans because fiscal year 2001 began on 1 October 2000, so some FY2001 loans were approved in late 2000.
+
+### Step 6: Economic indicators and early warnings
+
+**Question: could the 2010 loss peak have been seen coming, and how early?**
+
+Two signals, each Green / Amber / Red (example thresholds set for this project):
+- **Economy signal:** rise in the U.S. unemployment rate on the previous year (FRED series UNRATE). Amber from +1 point, Red from +2 points.
+- **Portfolio signal:** share of each new vintage charged off within 2 years, compared with the 2001–2003 average of **0.63%**. Amber from 2x, Red from 3x. It can be read just 2 years after approval.
+
+![Early warning by vintage](outputs/early_warning_vintages.png)
+
+| Year | Portfolio signal (vintage) | Economy signal | Annual charge-off rate |
+|---|---|---|---:|
+| 2005 | Green: 1.4x (2003) | Green: −0.45 pts | 1.06% |
+| 2006 | **Amber: 2.4x (2004)** | Green: −0.47 pts | 2.74% |
+| 2007 | **Red: 3.1x (2005)** | Green: +0.01 pts | 1.91% |
+| 2008 | Red: 5.6x (2006) | **Amber: +1.18 pts** | 4.36% |
+| 2009 | Red: 10.5x (2007) | **Red: +3.48 pts** | 4.82% |
+| 2010 | Red: 12.3x (2008) | Green: +0.33 pts | **9.34% (peak)** |
+
+Findings:
+1. **The portfolio's own data warned first, about 3 years ahead.** The portfolio signal turned Amber in 2006 and Red in 2007, three years before charge-offs peaked in 2010. The economy signal only turned Amber in 2008 and Red in 2009, two years later.
+2. **Unemployment moves with losses, not ahead of them.** The correlation between unemployment and the annual charge-off rate is +0.80 in the same year, and weaker (+0.67) when unemployment is taken one year earlier. For this portfolio, unemployment confirms a downturn rather than predicting it.
+3. **The deterioration hit every industry.** All 13 industries with enough loans were 3.9 to 8.6 times worse at age 3 for 2005–2006 loans than for 2001–2002 loans. Real Estate, Rental & Leasing worsened most (1.0% to 8.6%, 8.6 times), consistent with the housing bust. Information (11.4%) and Transportation & Warehousing (9.7%) had the highest 3-year failure rates.
+4. **California was safe in calm times but deteriorated most.** Its 3-year failure rate went from 1.0% (2001–02 loans) to 9.3% (2005–06 loans), 8.9 times worse, against 5.3 times for Texas. Combined with its 19.9% share (Step 4), this makes California the most important concentration to manage in a downturn, even though its overall risk index is below 1.
+5. **Post-crisis lending stayed above normal.** Every vintage up to 2012 is still Red (3.5x to 5.4x the baseline), matching Step 5's finding that post-crisis lending never returned to pre-boom quality.
+
+![The economy vs portfolio losses](outputs/economy_vs_chargeoffs.png)
+
+Limitations:
+- **Hindsight.** The thresholds were chosen while looking at this history, so the signals fit it better than they would fit a new downturn. A real framework would test them on other periods.
+- The economy signal also turned Amber in 2002 (unemployment +1.04 points after the 2001 recession) without a large loss wave following, although the tracked portfolio was still young then (Step 5).
+- The correlation uses only 13 yearly points, and correlation does not prove cause.
+- Only California and Texas have 5,000+ loans in both periods for the state comparison.
