@@ -282,3 +282,27 @@ Limitations:
 - **CDC Small Business Finance Corp shows 0 defaults on 1,946 loans** (index 0.00). That is almost certainly how this lender's loans are recorded in the data, not real performance, so it should be ignored.
 - The adjustment only accounts for year, size and industry. Differences in state, borrower type or loan terms can still affect a lender's index.
 - Lender names are as recorded; the same bank may appear under slightly different names after mergers.
+
+### Step 8: Excel limits workbook and Power BI dashboard
+
+**Excel limits workbook:** [`outputs/concentration_limits.xlsx`](outputs/concentration_limits.xlsx)
+- **Settings** sheet with the limit policy in yellow input cells (industry and state limits, tighter limits for high-risk groups, risk threshold, watch level).
+- **Limit Monitor** sheet with one row per industry and state. Limit, headroom, % of limit used and status are all formulas (`IF`), so changing a setting recalibrates every status at once.
+- **Summary** sheet with Breach / Watch / Within counts (`COUNTIFS`), the largest exposure in each dimension (`INDEX`/`MATCH`), and a check that shares add up to 100%.
+- Checked against the Python results in Step 4: every limit and status matches.
+
+**Power BI dashboard:** [`outputs/dashboard/credit_portfolio_dashboard.pbix`](outputs/dashboard/credit_portfolio_dashboard.pbix) · [PDF version](outputs/dashboard/dashboard.pdf)
+
+Built on [`outputs/dashboard/portfolio_cube.csv`](outputs/dashboard/portfolio_cube.csv): one row per approval year × industry × state × loan size, which ties exactly to the cleaned data (same loans, dollars, defaults and losses). DAX measures calculate default rate, loss rate and share of dollars for whatever is selected.
+
+| Page | What it shows |
+|---|---|
+| Portfolio Overview | Headline cards (loans, dollars, default rate, loss rate), default rate by year, slicers for era, industry, state and loan size |
+| Concentrations & Limits | Limit monitor with red/amber/green on % of limit used, share of dollars by industry |
+| Early Warnings | Portfolio early warning signal by year, vintage curves, unemployment rate |
+| Peer Benchmarking | 15 largest lenders and KeyBank: raw vs fair performance index and loss index |
+
+![Dashboard: Portfolio Overview](outputs/dashboard/overview.png)
+![Dashboard: Concentrations & Limits](outputs/dashboard/limits.png)
+![Dashboard: Early Warnings](outputs/dashboard/early_warnings.png)
+![Dashboard: Peer Benchmarking](outputs/dashboard/benchmarking.png)

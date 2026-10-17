@@ -1,0 +1,15 @@
+year,unemployment_rate,unemployment_change,annual_chargeoff_rate_pct,economy_signal
+2001,4.74,0.77,0.04,Green
+2002,5.78,1.04,0.26,Amber
+2003,5.99,0.21,0.62,Green
+2004,5.54,-0.45,0.69,Green
+2005,5.08,-0.46,1.06,Green
+2006,4.61,-0.47,2.74,Green
+2007,4.62,0.01,1.91,Green
+2008,5.8,1.18,4.36,Amber
+2009,9.28,3.48,4.82,Red
+2010,9.61,0.33,9.34,Green
+2011,8.93,-0.68,6.28,Green
+2012,8.07,-0.86,4.11,Green
+2013,7.36,-0.71,3.87,Green
+2014,6.16,-1.2,3.46,Green
