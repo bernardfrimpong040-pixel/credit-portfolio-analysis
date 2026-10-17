@@ -22,8 +22,9 @@
 -- We look only at OLD vintages (1989-2005), because those loans have had
 -- 9+ years to show their full story. For each loan age, we count how many
 -- defaults happened, then add them up as we go ("cumulative percent").
--- If, say, 80% of defaults happen within 4 years, then a loan younger than
--- 4 years hasn't had time to show whether it is good or bad.
+-- RESULT ON THE REAL DATA: only about 1/3 of defaults happen within 4 years,
+-- about 1/2 within 5 years, and about 87% within 8 years. So a vintage needs
+-- about 8 years before we can fairly judge it. Q2 uses that rule.
 WITH defaults AS (
     SELECT
         -- months between approval and charge-off, turned into whole years
@@ -50,11 +51,16 @@ ORDER BY years_until_default;
 
 -- Q2. The vintage table: performance of each approval year
 -- loan_age_in_2014 = how old the vintage was when the data was collected.
--- Vintages younger than 4 years are labelled "Too young to judge" (Q1 shows why).
+-- Based on Q1, each vintage gets one of three labels:
+--   Seasoned           8+ years old  -> about 87% or more of its defaults have happened
+--   Partly seasoned    4-7 years old -> about 1/3 to 4/5 have happened, so its
+--                                       default rate is a MINIMUM; it can only go up
+--   Too young to judge under 4 years -> under 1/3 have happened
 SELECT
     approval_year                                               AS vintage,
     2014 - approval_year                                        AS loan_age_in_2014,
-    CASE WHEN approval_year <= 2010 THEN 'Seasoned'
+    CASE WHEN approval_year <= 2006 THEN 'Seasoned'
+         WHEN approval_year <= 2010 THEN 'Partly seasoned'
          ELSE 'Too young to judge' END                          AS seasoning,
     COUNT(*)                                                    AS number_of_loans,
     ROUND(SUM(loan_amount) / 1e6, 0)                            AS approved_millions,

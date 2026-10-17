@@ -28,13 +28,16 @@ DATABASE_FILE = PROJECT_FOLDER / "data" / "loans.duckdb"
 OUTPUT_FOLDER = PROJECT_FOLDER / "outputs"
 OUTPUT_FOLDER.mkdir(exist_ok=True)
 
-# The last vintage we treat as "seasoned" (old enough to judge). See Q1 of
-# sql/03_vintage_analysis.sql for why: most defaults happen in the first few years.
-LAST_SEASONED_YEAR = 2010
+# How old a vintage must be before we trust its numbers. See Q1 of
+# sql/03_vintage_analysis.sql: about 87% of defaults happen within 8 years,
+# but only about 1/3 within 4 years.
+LAST_SEASONED_YEAR = 2006          # 8+ years old in 2014
+LAST_PARTLY_SEASONED_YEAR = 2010   # 4-7 years old in 2014
 
 # Chart colours, kept in one place so every chart looks the same
-BLUE = "#2a78d6"           # main colour for the bars
-BLUE_LIGHT = "#a9c8ef"     # lighter blue for the "too young to judge" years
+BLUE = "#2a78d6"           # main colour for the bars (seasoned)
+BLUE_MID = "#7aa9e8"       # medium blue for "partly seasoned" years
+BLUE_LIGHT = "#bcd4f3"     # light blue for "too young to judge" years
 TEXT = "#0b0b0b"           # main text
 TEXT_SOFT = "#52514e"      # axis labels and notes
 GRID = "#e4e3df"           # faint grid lines
@@ -54,6 +57,7 @@ vintages = con.execute(
     SELECT
         approval_year                                               AS vintage,
         CASE WHEN approval_year <= {LAST_SEASONED_YEAR} THEN 'Seasoned'
+             WHEN approval_year <= {LAST_PARTLY_SEASONED_YEAR} THEN 'Partly seasoned'
              ELSE 'Too young to judge' END                          AS seasoning,
         COUNT(*)                                                    AS number_of_loans,
         ROUND(SUM(loan_amount) / 1e6, 0)                            AS approved_millions,
@@ -118,8 +122,15 @@ def label_highest_bar(ax, x_values, y_values, suffix):
 # 3. Chart 1: default rate and loss rate by vintage (two panels, one above
 #    the other, so each measure has its own scale)
 # ---------------------------------------------------------------------------
-bar_colours = [BLUE if s == "Seasoned" else BLUE_LIGHT for s in vintages["seasoning"]]
-bar_hatches = ["" if s == "Seasoned" else "///" for s in vintages["seasoning"]]
+# Each seasoning label gets its own colour and pattern (the pattern helps
+# readers who can't easily tell the blues apart, and when printed in grey)
+style_for = {
+    "Seasoned":           (BLUE, ""),
+    "Partly seasoned":    (BLUE_MID, ".."),
+    "Too young to judge": (BLUE_LIGHT, "///"),
+}
+bar_colours = [style_for[s][0] for s in vintages["seasoning"]]
+bar_hatches = [style_for[s][1] for s in vintages["seasoning"]]
 
 figure, (top, bottom) = plt.subplots(2, 1, figsize=(10, 7), sharex=True)
 figure.patch.set_facecolor(BACKGROUND)
@@ -141,12 +152,16 @@ bottom.set_xticks(vintages["vintage"][::2])        # label every second year
 bottom.set_xlabel("Approval year (vintage)", color=TEXT_SOFT, fontsize=9)
 
 legend_items = [
-    Patch(facecolor=BLUE, label="Seasoned (4+ years old in 2014)"),
+    Patch(facecolor=BLUE, label="Seasoned: 8+ years old in 2014"),
+    Patch(facecolor=BLUE_MID, hatch="..", edgecolor=BACKGROUND,
+          label="Partly seasoned: 4-7 years old (rates can still rise)"),
     Patch(facecolor=BLUE_LIGHT, hatch="///", edgecolor=BACKGROUND,
-          label="Too young to judge (2011-2014)"),
+          label="Too young to judge: under 4 years old"),
 ]
-top.legend(handles=legend_items, loc="upper left", frameon=False, fontsize=9,
-           labelcolor=TEXT_SOFT, bbox_to_anchor=(0, 0.92))
+legend = top.legend(handles=legend_items, loc="upper left", fontsize=9,
+                    labelcolor=TEXT_SOFT, bbox_to_anchor=(0, 0.92),
+                    frameon=True, facecolor=BACKGROUND, edgecolor=BACKGROUND,
+                    framealpha=1)   # solid background so grid lines don't run through the text
 
 figure.suptitle("SBA 7(a) loans: performance by approval year, 1989-2014",
                 x=0.01, ha="left", fontsize=13, color=TEXT, fontweight="bold")

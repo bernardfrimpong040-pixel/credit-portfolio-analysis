@@ -17,10 +17,10 @@ vintage,seasoning,number_of_loans,approved_millions,default_rate_pct,loss_rate_p
 2004,Seasoned,68195,11390.0,18.0,6.5
 2005,Seasoned,76958,11605.0,25.3,10.4
 2006,Seasoned,75756,10093.0,35.0,17.3
-2007,Seasoned,71649,8772.0,42.8,22.8
-2008,Seasoned,39458,5777.0,41.2,20.0
-2009,Seasoned,19103,3427.0,20.8,7.6
-2010,Seasoned,16828,3469.0,13.7,3.6
+2007,Partly seasoned,71649,8772.0,42.8,22.8
+2008,Partly seasoned,39458,5777.0,41.2,20.0
+2009,Partly seasoned,19103,3427.0,20.8,7.6
+2010,Partly seasoned,16828,3469.0,13.7,3.6
 2011,Too young to judge,12593,3656.0,7.9,1.8
 2012,Too young to judge,5992,1642.0,5.7,1.1
 2013,Too young to judge,2455,693.0,2.9,0.4
