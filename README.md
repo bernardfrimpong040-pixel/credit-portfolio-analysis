@@ -309,7 +309,9 @@ Built on [`outputs/dashboard/portfolio_cube.csv`](outputs/dashboard/portfolio_cu
 
 ### Step 9: Executive summary for leadership
 
-A 5-slide summary with speaker notes: [`outputs/executive_summary.pptx`](outputs/executive_summary.pptx) · [PDF](outputs/executive_summary.pdf)
+A 5-slide summary with speaker notes: **[view the PDF](outputs/executive_summary.pdf)** (opens on GitHub) · [download the PowerPoint](outputs/executive_summary.pptx) (GitHub can't preview `.pptx`; click **Download raw file**)
+
+![Executive summary: cover slide](outputs/executive_summary_cover.png)
 
 1. **Summary:** 54% of losses came from 2005–2008 loans (21% of dollars); 3 concentration limits breached; a 3-year early warning before the 2010 loss peak.
 2. **Performance:** default rate by approval year, peaking at 42.8% for 2007 loans.
