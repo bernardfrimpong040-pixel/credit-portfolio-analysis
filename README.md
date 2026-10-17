@@ -106,3 +106,42 @@ Findings:
 Checks and limitations:
 - **Flagged loans don't change the result:** removing all 6,215 flagged loans moves the default rate from 17.07% to 17.02% and the loss rate from 6.71% to 6.59%.
 - **Charge-off dates before 2001 look incomplete.** Only 3,587 charge-offs are dated 1989–2000, although 1990s vintages alone have about 15,500 defaults. Default *rates* (based on loan status) are unaffected; *timing* results (findings 1 and 5) lean on post-2001 records.
+
+### Step 4: Risk concentrations and limits
+
+Loans approved 2001–2010 (industry is recorded and loans are at least 4 years old): **507,571 loans, $84.2B**.
+
+**Risk index** = share of dollars lost ÷ share of dollars lent. Above 1.0 means a group loses more than its size suggests.
+
+![Industry share of money lent vs lost](outputs/industry_concentration.png)
+
+**Limit monitor** (example limits set for this project: 15% per industry, 10% per state; 10% and 7.5% for groups with risk index above 1.25; "Watch" at 80% of limit). Full list of 72 groups: [`outputs/limit_monitor.csv`](outputs/limit_monitor.csv)
+
+| Group | Share of dollars | Risk index | Limit | Headroom | Status |
+|---|---:|---:|---:|---:|---|
+| California | 19.9% | 0.84 | 10.0% | −9.9% | **Breach** |
+| Retail Trade | 17.1% | 1.18 | 15.0% | −2.1% | **Breach** |
+| Accommodation & Food Services | 17.0% | 0.99 | 15.0% | −2.0% | **Breach** |
+| Manufacturing | 12.9% | 0.75 | 15.0% | +2.1% | Watch |
+| Texas | 8.4% | 1.04 | 10.0% | +1.6% | Watch |
+
+Findings:
+1. **Two industries hold a third of the money.** Retail (17.1%) and Accommodation & Food Services (17.0%) together hold 34.1% of dollars lent. Both depend on consumer spending, so a downturn is likely to hit them at the same time.
+2. **California is the largest single concentration** at 19.9% of dollars, about twice the example state limit. Its loans lost *less* than average (risk index 0.84), so the issue is size, not loan quality.
+3. **Risk hot spots are smaller groups that lose more than their size:**
+   - Construction: 6.7% of dollars but 9.1% of losses (risk index 1.35, loss rate 14.2%)
+   - Florida: 5.5% of dollars but 8.8% of losses (risk index 1.59, default rate 36.0%)
+   - Michigan (1.39), Georgia (1.30) and New York (1.27) also lose clearly more than their size.
+   Florida is within its tightened 7.5% limit but has used 73% of it, so it is the next group to reach Watch.
+4. **Safer groups:** Health Care (risk index 0.58: 8.5% of dollars, 5.0% of losses), Manufacturing (0.75), Minnesota (0.75) and Washington (0.72).
+5. **Small loans are much riskier.** Loans under $50K are 41.4% of loans but only 5.4% of dollars. They default at 32.4%, 3.2 times the 10.0% rate for loans of $1M and over, and lose 26.4% of their dollars (risk index about 2.5). This confirms the Step 3 finding that defaulted loans were smaller than average.
+
+![Default rate by loan size](outputs/loan_size_risk.png)
+
+6. **Overall concentration (HHI):** industry 1,073 (*moderately concentrated*, as spread out as 9.3 equal industries), state 644 and lender 108 (*not concentrated*). The largest lender holds only 4.9% of dollars.
+7. **Lender results mostly reflect loan size.** Bank of America has the highest risk index among the 10 largest lenders (2.58), but its average loan is about $43K, against about $168K at Wells Fargo. Comparing lenders fairly means comparing like-for-like loans, which Step 7 (peer benchmarking) does.
+
+Limitations:
+- Groups with very few loans give unreliable rates. Public Administration (81 loans) and "Not recorded" (68 loans) show high risk indexes that should be ignored.
+- The 2001–2010 window includes the crisis vintages. Groups that lent more in 2005–2008 will look riskier partly because of *when* they lent, not only *what* they lent. Step 6 separates the two.
+- The limits are example settings, not SBA or bank policy.
