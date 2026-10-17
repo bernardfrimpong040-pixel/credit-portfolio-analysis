@@ -145,3 +145,48 @@ Limitations:
 - Groups with very few loans give unreliable rates. Public Administration (81 loans) and "Not recorded" (68 loans) show high risk indexes that should be ignored.
 - The 2001–2010 window includes the crisis vintages. Groups that lent more in 2005–2008 will look riskier partly because of *when* they lent, not only *what* they lent. Step 6 separates the two.
 - The limits are example settings, not SBA or bank policy.
+
+### Step 5: Status roll-forward and vintage curves
+
+This data has two end statuses (paid in full, charged off), so "migration" here means how fast loans move from **performing** to **charged off**. Loans approved 2001 onwards.
+
+![Vintage curves](outputs/vintage_curves.png)
+
+**Cumulative % charged off at the same loan age** (selected vintages; full table in [`outputs/vintage_curves.csv`](outputs/vintage_curves.csv)):
+
+| Vintage | Age 2 | Age 3 | Age 4 | Age 5 |
+|---|---:|---:|---:|---:|
+| 2002 | 0.5% | 1.2% | 2.8% | 6.0% |
+| 2005 | 1.9% | 5.2% | 9.7% | 14.6% |
+| 2007 | 6.6% | 16.6% | 29.4% | 35.8% |
+| 2008 | 7.7% | 20.7% | 30.5% | 35.6% |
+| 2010 | 3.3% | 7.7% | 11.8% | – |
+| 2011 | 2.2% | 5.8% | – | – |
+
+Findings:
+1. **Compared at the same age, crisis vintages were 10–17 times worse.** By age 4, 29.4% of 2007 loans had been charged off, against 2.8% of 2002 loans (10.5 times). By age 3, 2008 loans were at 20.7% against 1.2% (17 times).
+2. **The 2007 vintage is still getting worse.** It reached 41.7% at age 7 and was still adding about 3 points a year. If it follows the 2005 vintage's later pattern, it would reach about 44% by age 9 (a rough estimate, not a forecast model).
+3. **The "too young to judge" vintages are not safe.** Step 3 showed 2011 loans at a low 7.9% overall, but at the *same age* they are worse than pre-boom loans: 5.8% at age 3 against 1.2% for 2002 (about 5 times). 2010 loans are 4.2 times worse than 2002 at age 4. Post-crisis lending improved on 2007–2008 but did not return to pre-boom quality.
+4. **Crisis-era loans failed younger.** For 2005–2008 loans that were charged off, the median time to charge-off was 3.7 years and 57.7% failed within 4 years. For 2001–2004 loans the median was 4.9 years and only 32.6% failed within 4 years: the recession reached them earlier in their life. (Part of this gap comes from 2005–2008 loans being watched for fewer years; finding 1 confirms the effect is real.)
+
+![Annual charge-off rate](outputs/annual_chargeoff_rate.png)
+
+**Yearly roll-forward** (number of loans; full table in [`outputs/roll_forward.csv`](outputs/roll_forward.csv)). The table adds up exactly in every year: start + new − charged off − paid off = end, with a difference of 0 (checked in `sql/05_roll_forward.sql`, Q3).
+
+| Year | Loans at start | New loans | Charged off | Paid off | Loans at end | Annual charge-off rate |
+|---|---:|---:|---:|---:|---:|---:|
+| 2004 | 151,582 | 71,041 | 1,045 | 3,281 | 218,297 | 0.69% |
+| 2006 | 284,695 | 76,873 | 7,810 | 9,680 | 344,078 | 2.74% |
+| 2008 | 390,356 | 30,703 | 17,035 | 20,069 | 383,955 | 4.36% |
+| **2010** | **358,823** | **16,754** | **33,513** | **36,291** | **305,773** | **9.34%** |
+| 2012 | 253,307 | 5,047 | 10,402 | 43,818 | 204,134 | 4.11% |
+| 2014 | 156,249 | 128 | 5,414 | 32,177 | 118,786 | 3.46% |
+
+5. **The charge-off rate peaked at 9.34% in 2010**, about 13.5 times the 0.69% in 2004. 33,513 loans were charged off that year.
+6. **New lending fell 78%**, from 76,873 loans in 2006 to 16,754 in 2010, as the crisis hit.
+7. **By 2014 the rate was still 3.46%**, well above pre-boom levels.
+
+Limitations:
+- The data has no payoff dates for good loans, so each is assumed outstanding until its scheduled end date. Loans repaid early are counted too long, which makes the annual rate **somewhat too low**.
+- Only loans approved from 2001 are tracked, so in 2002–2005 the tracked portfolio is young, and young loans rarely fail yet. Early-year rates are therefore low partly because of age. The vintage curves (finding 1) are the fair comparison; the roll-forward shows **timing**.
+- 2001 starts with 7,886 loans because fiscal year 2001 began on 1 October 2000, so some FY2001 loans were approved in late 2000.
