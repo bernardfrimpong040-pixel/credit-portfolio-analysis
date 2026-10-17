@@ -11,14 +11,15 @@
 I act as a **credit portfolio analyst** looking after a real portfolio of
 U.S. small-business loans. These loans were made by banks and guaranteed by the
 U.S. Small Business Administration (SBA). The data is free, public, and covers
-hundreds of thousands of real loans with their industry, state, lender, size,
-and final outcome (paid back in full or charged off as a loss).
+about 900,000 real loans with their industry, state, lender, size,
+and final outcome (paid back in full or charged off as a loss), including
+the 2008 financial crisis.
 
 ## Data sources
 
 | Source | What it gives us | Link |
 |---|---|---|
-| SBA 7(a) FOIA loan data | Every 7(a) loan: amount, industry (NAICS), state, lender, status, charge-off amount | https://data.sba.gov/dataset/7-a-504-foia |
+| SBA national loan data (Kaggle) | ~900,000 SBA loans approved up to 2014: amount, industry (NAICS), state, lender, status, charge-off amount | https://www.kaggle.com/datasets/mirbektoktogaraev/should-this-loan-be-approved-or-denied |
 | FRED (Federal Reserve Bank of St. Louis) | Economic indicators, e.g. unemployment rate | https://fred.stlouisfed.org/ |
 
 ## Roadmap (one step at a time)
@@ -56,4 +57,23 @@ credit-portfolio-analysis/
 
 ## Findings
 
-*(Filled in as the project progresses.)*
+### Step 2: Data quality
+
+Starting data: **899,164 loans** (FY1962–FY2014), $173.3B approved.
+
+| Rule | Reason | Loans removed | Loans left |
+|---|---|---:|---:|
+| 1 | Approved before 1989 (too few loans to measure reliably) | 14,715 | 884,449 |
+| 2 | No final status (can't tell if repaid or lost) | 1,916 | 882,533 |
+| 3 | Loan amount missing, zero or negative | 0 | 882,533 |
+
+**Kept 882,533 loans (98.2%), $170.2B approved, 17.07% charged off.**
+Full log: [`outputs/data_quality_log.csv`](outputs/data_quality_log.csv)
+
+What the checks found:
+- **No duplicate loans**, and fewer than 0.2% of loans are missing a state or lender.
+- **Industry codes are missing for about 55% of loans approved before 2001**, and almost none after. Industry analysis therefore uses loans from 2001 onwards.
+- **Dates with 2-digit years** ("62") were read as 2062. These were all 1960s loans, removed by rule 1. 0 date problems remain after cleaning.
+- **Odd but kept (flagged) loans:** 4,698 paid in full with a loss recorded, 792 with a 0-month term, 531 with a loss bigger than the approved amount, 236 charged off with a $0 loss. Together they are under 0.7% of loans; later steps check that they don't change the results.
+- **Recent loans are too young to judge.** Loans approved 2011–2014 show charge-off rates of 1.9%–7.8%, because most had only 1–3 years to fail before the data was collected in 2014. They are labelled as unseasoned in the analysis rather than treated as safe.
+- **First signal of risk timing:** loans approved in 2007 charged off at 42.7%, 3.7 times the 11.4% rate for 2000 loans. Step 3 investigates this.

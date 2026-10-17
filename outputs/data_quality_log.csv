@@ -1,0 +1,4 @@
+rule_number,reason,rows_before,rows_removed,rows_after
+1,Approved before 1989 (too few loans to measure reliably),899164,14715,884449
+2,"No final status, or cancelled before any money was lent",884449,1916,882533
+3,"Loan amount missing, zero or negative",882533,0,882533

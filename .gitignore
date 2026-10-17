@@ -1,0 +1,11 @@
+# The data files are too big for GitHub, so we never upload them.
+data/raw/
+*.duckdb
+*.duckdb.wal
+
+# Your private Python environment
+.venv/
+
+# Python's automatic cache files
+__pycache__/
+data/
