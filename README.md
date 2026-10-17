@@ -306,3 +306,32 @@ Built on [`outputs/dashboard/portfolio_cube.csv`](outputs/dashboard/portfolio_cu
 ![Dashboard: Concentrations & Limits](outputs/dashboard/limits.png)
 ![Dashboard: Early Warnings](outputs/dashboard/early_warnings.png)
 ![Dashboard: Peer Benchmarking](outputs/dashboard/benchmarking.png)
+
+### Step 9: Executive summary for leadership
+
+A 5-slide summary with speaker notes: [`outputs/executive_summary.pptx`](outputs/executive_summary.pptx) · [PDF](outputs/executive_summary.pdf)
+
+1. **Summary:** 54% of losses came from 2005–2008 loans (21% of dollars); 3 concentration limits breached; a 3-year early warning before the 2010 loss peak.
+2. **Performance:** default rate by approval year, peaking at 42.8% for 2007 loans.
+3. **Concentrations:** California, Retail and Accommodation & Food over their limits; Florida, Construction and small loans as hot spots.
+4. **Early warnings and peers:** the 2-year early-default signal turned Red in 2007; KeyBank had 29% fewer defaults than like-for-like peers.
+5. **Recommendations:**
+   1. Add the 2-year early-default signal to quarterly reporting (Amber at 2× normal, Red at 3×).
+   2. Manage Retail and Accommodation & Food as one consumer-spending concentration (34.1% of dollars).
+   3. Set a glide path to bring California (19.9%) back towards its limit.
+   4. Price and underwrite small loans (under $50K, 3.2× the default rate) and hot spots (Florida, Georgia, Construction) for their risk.
+   5. Benchmark lenders like for like, not on raw default rates.
+
+## Skills demonstrated
+
+| Job requirement | Where in this project |
+|---|---|
+| SQL and Python to query, analyze and transform data | Steps 1–7 (`sql/`, `scripts/`), 882,533 loans in DuckDB |
+| Data quality and attention to detail | Step 2 cleaning log, flags and tie-out checks in Steps 5 and 8 |
+| Portfolio performance measurement | Steps 3 and 5: vintage analysis, vintage curves, roll-forward |
+| Risk concentrations, limits and tolerances | Step 4 limit monitor, Step 8 Excel workbook with recalibration |
+| Credit migration, emerging risks, early warning indicators | Steps 5 and 6 |
+| Economic indicators and external data | Step 6 (FRED unemployment rate) |
+| Peer benchmarking | Step 7 actual-vs-expected comparison |
+| Dashboards and reporting (Power BI), advanced Excel | Step 8 |
+| Presenting to senior leadership (PowerPoint) | Step 9 |
